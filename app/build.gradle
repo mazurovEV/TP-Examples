@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:20.0.+'
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"

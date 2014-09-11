@@ -19,15 +19,12 @@ public class FragmentsActivity extends FragmentActivity implements NewsListFragm
 
     @Override
     public void onArticleSelected(int position) {
-        DetailFragment newFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putInt(DetailFragment.NEWS_NO, position);
-        newFragment.setArguments(args);
+        DetailFragment newFragment = DetailFragment.getInstance(position);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.add(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
 
         transaction.commit();
     }
