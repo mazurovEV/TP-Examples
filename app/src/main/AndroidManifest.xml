@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tp.emazurov.lesson1" >
+<manifest
+    package="tp.emazurov.lesson1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -18,6 +19,7 @@
         </activity>
         <activity android:name=".StartedActivity"/>
         <activity android:name=".StartedForResultActivity"/>
+        <activity android:name=".FragmentsActivity"/>
     </application>
 
 </manifest>

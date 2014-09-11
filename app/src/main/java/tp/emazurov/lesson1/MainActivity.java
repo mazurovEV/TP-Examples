@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,9 +15,9 @@ import android.widget.EditText;
 public class MainActivity extends Activity {
 
     public static final String EXTRA_EDIT_TEXT = "extra_edit_text";
-    private EditText mEditText;
     private static final int REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
     private static final String LOG_TAG = MainActivity.class.getName();
+    private EditText mEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +50,15 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
                 startActivity(browserIntent);
+            }
+        });
+
+        Button startFragmentActivity = (Button) findViewById(R.id.start_fragment_activity);
+        startFragmentActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FragmentsActivity.class);
+                startActivity(intent);
             }
         });
 
