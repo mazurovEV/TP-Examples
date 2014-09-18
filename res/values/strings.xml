@@ -13,5 +13,7 @@
     <string name="started_activity_text">Я запущена с помощью интента из MainActivity</string>
     <string name="edit_text_result">Результат</string>
     <string name="start_activity_with_fragment">Activity с фрагментами</string>
+    <string name="start_handler">Запуск Handler</string>
+    <string name="start_async_task">Запуск AsyncTask</string>
     <string name="understood">Понял</string>
 </resources>

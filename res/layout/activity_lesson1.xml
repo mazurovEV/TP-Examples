@@ -32,10 +32,35 @@
         android:lines="2"
         android:text="@string/start_activity_with_fragment"/>
 
+
+    <Button
+        android:id="@+id/start_handler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        android:text="@string/start_handler" />
+
+    <Button
+        android:id="@+id/start_async_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        android:text="@string/start_async_task" />
+
     <EditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/edit_text"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"
+        android:indeterminate="true"
+        >
+    </ProgressBar>
 
 </LinearLayout>

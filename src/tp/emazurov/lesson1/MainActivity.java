@@ -3,11 +3,17 @@ package tp.emazurov.lesson1;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+
+import java.util.concurrent.TimeUnit;
 
 //TODO: запуск активити по Intent с action
 //TODO: тест onSaveInstanceState
@@ -18,6 +24,8 @@ public class MainActivity extends Activity {
     private static final int REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
     private static final String LOG_TAG = MainActivity.class.getName();
     private EditText mEditText;
+    private Handler h;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +70,52 @@ public class MainActivity extends Activity {
             }
         });
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        final Button startHandler = (Button) findViewById(R.id.start_handler);
+        startHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startHandler.setEnabled(false);
+                progressBar.setVisibility(View.VISIBLE);
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        for (int i = 1; i <= 10; i++) {
+                            try {
+                                TimeUnit.SECONDS.sleep(1);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            h.sendEmptyMessage(i);
+                            Log.d(LOG_TAG, "i = " + i);
+                        }
+                    }
+                });
+                t.start();
+            }
+        });
+
         mEditText = (EditText) findViewById(R.id.edit_text);
+
+        h = new Handler() {//context leak
+            @Override
+            public void handleMessage(Message msg) {
+                mEditText.setText("i = " + msg.what);
+                if (msg.what == 10) {
+                    startHandler.setEnabled(true);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
+
+        Button startAsyncTask = (Button) findViewById(R.id.start_async_task);
+        startAsyncTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+               new AsyncTaskExample().execute();
+            }
+        });
     }
 
     @Override
@@ -100,5 +153,26 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy");
         super.onDestroy();
+    }
+
+    public class AsyncTaskExample extends AsyncTask<Integer,Void, Void> {
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            for(int i = 0; i < 10; i++) {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mEditText.setText("AsyncTask завершен");
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 }
