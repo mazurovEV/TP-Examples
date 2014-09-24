@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     compile 'com.android.support:support-v4:20.0.0@aar'
+    compile 'org.apache.httpcomponents:httpclient:4.3.5'
 }
 
 android {

@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import tp.emazurov.lesson1.network.Network;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 //TODO: запуск активити по Intent с action
@@ -20,11 +22,11 @@ import java.util.concurrent.TimeUnit;
 //TODO: LinearLayouts с weight
 public class MainActivity extends Activity {
 
-    public static final String EXTRA_EDIT_TEXT = "extra_edit_text";
-    private static final int REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
-    private static final String LOG_TAG = MainActivity.class.getName();
+    public static final  String EXTRA_EDIT_TEXT                  = "extra_edit_text";
+    private static final int    REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
+    private static final String LOG_TAG                          = MainActivity.class.getName();
     private EditText mEditText;
-    private Handler h;
+    private Handler  h;
     private ProgressBar progressBar;
 
     @Override
@@ -113,7 +115,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-               new AsyncTaskExample().execute();
+                new AsyncTaskExample().execute();
             }
         });
     }
@@ -126,7 +128,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_ACTIVITY_FOR_RESULT) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_ACTIVITY_FOR_RESULT) {
             mEditText.setText(data.getStringExtra(StartedForResultActivity.EXTRA_EDIT_TEXT_RESULT));
         }
     }
@@ -155,16 +157,15 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
 
-    public class AsyncTaskExample extends AsyncTask<Integer,Void, Void> {
+    public class AsyncTaskExample extends AsyncTask<Integer, Void, Void> {
 
         @Override
         protected Void doInBackground(Integer... params) {
-            for(int i = 0; i < 10; i++) {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+//                new Network().urlConnection();
+                new Network().httpGet();
+            } catch (IOException e) {
+                Log.e("", e.getLocalizedMessage(), e);
             }
             return null;
         }
