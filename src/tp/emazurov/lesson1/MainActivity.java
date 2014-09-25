@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
 import tp.emazurov.lesson1.network.Network;
 
 import java.io.IOException;
@@ -22,11 +23,11 @@ import java.util.concurrent.TimeUnit;
 //TODO: LinearLayouts с weight
 public class MainActivity extends Activity {
 
-    public static final  String EXTRA_EDIT_TEXT                  = "extra_edit_text";
-    private static final int    REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
-    private static final String LOG_TAG                          = MainActivity.class.getName();
+    public static final String EXTRA_EDIT_TEXT = "extra_edit_text";
+    private static final int REQUEST_CODE_ACTIVITY_FOR_RESULT = 5;
+    private static final String LOG_TAG = MainActivity.class.getName();
     private EditText mEditText;
-    private Handler  h;
+    private Handler h;
     private ProgressBar progressBar;
 
     @Override
