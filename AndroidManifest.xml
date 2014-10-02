@@ -21,6 +21,10 @@
         <activity android:name=".StartedActivity"/>
         <activity android:name=".StartedForResultActivity"/>
         <activity android:name=".FragmentsActivity"/>
+
+        <service android:name=".network.WeatherService" />
+
+        <receiver android:name=".MainActivity$Receiver" />
     </application>
 
 </manifest>

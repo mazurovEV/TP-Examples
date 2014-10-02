@@ -1,5 +1,7 @@
 package tp.emazurov.lesson1.network;
 
+import android.app.IntentService;
+import android.content.Intent;
 import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +18,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
+import tp.emazurov.lesson1.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,10 +30,22 @@ import java.net.URL;
 /**
  * Created by Rustam on 25.09.2014.
  */
-public class Network {
+public class WeatherService extends IntentService {
 
-    public void urlConnection() throws IOException {
-        URL url = new URL("https://simple-weather.p.mashape.com/weather?lat=55.865314&lng=37.603341");
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public WeatherService() {
+        super("WeatherService");
+    }
+
+    public void urlConnection(String longitude, String latitude) throws IOException {
+        URL url = new URL("https://simple-weather.p.mashape.com/weather?lat=" + latitude + "&lng=" + longitude);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("X-Mashape-Key", "xvtJ6rRJAVmshbFasYHld3ERssImp1SWJWfjsnVUzLXgfE7U53");
@@ -49,6 +64,11 @@ public class Network {
             result += line;
         }
         Log.e("", result);
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.Receiver.ACTION);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra(MainActivity.Receiver.WEATHER, result);
+        sendBroadcast(broadcastIntent);
     }
 
     public void httpGet() throws IOException {
@@ -82,4 +102,14 @@ public class Network {
         }
     }
 
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        String longitude = intent.getStringExtra(LONGITUDE);
+        String latitude = intent.getStringExtra(LATITUDE);
+        try {
+            urlConnection(longitude, latitude);
+        } catch (IOException e) {
+            Log.e("", e.getLocalizedMessage(), e);
+        }
+    }
 }
