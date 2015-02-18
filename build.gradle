@@ -6,15 +6,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.0.1'
+        classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
     }
 }
 
+apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
-
-tasks.withType(Compile) {
-    options.encoding = "UTF-8"
-}
 
 repositories {
     mavenCentral()
@@ -22,18 +20,18 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.0.0@aar'
+    compile 'com.android.support:support-v4:21.0.3@aar'
 }
 
 android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
     }
 
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -53,6 +51,13 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
