@@ -5,13 +5,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -19,9 +22,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import tp.emazurov.lesson1.network.WeatherService;
 
 import java.util.concurrent.TimeUnit;
+
+import tp.emazurov.lesson1.network.WeatherService;
 
 //TODO: запуск активити по Intent с action
 //TODO: тест onSaveInstanceState
@@ -35,6 +39,7 @@ public class MainActivity extends Activity {
     private Handler h;
     private ProgressBar progressBar;
     private Receiver receiver;
+    private boolean mIsBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,18 +127,45 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-//                new AsyncTaskExample().execute();
+                new AsyncTaskExample().execute();
+            }
+        });
+
+        Button startAService = (Button) findViewById(R.id.start_service);
+        startAService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(MainActivity.this, WeatherService.class);
                 intent.putExtra(WeatherService.LATITUDE, "55.865314");
                 intent.putExtra(WeatherService.LONGITUDE, "37.603341");
                 startService(intent);
+
+                IntentFilter filter = new IntentFilter(Receiver.ACTION);
+                filter.addCategory(Intent.CATEGORY_DEFAULT);
+                receiver = new Receiver();
+                registerReceiver(receiver, filter);
             }
         });
 
-        IntentFilter filter = new IntentFilter(Receiver.ACTION);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new Receiver();
-        registerReceiver(receiver, filter);
+
+
+        Button startBoundAService = (Button) findViewById(R.id.start_bound_service);
+        startBoundAService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                doBindService();
+            }
+        });
+
+        Button unboundAService = (Button) findViewById(R.id.unbound_service);
+        unboundAService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doUnbindService();
+            }
+        });
 
     }
 
@@ -159,7 +191,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         Log.d(LOG_TAG, "onPause");
-        unregisterReceiver(receiver);
+        if(receiver != null) unregisterReceiver(receiver);
         super.onPause();
     }
 
@@ -172,11 +204,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy");
+        unbindService(mConnection);
         super.onDestroy();
     }
 
     public void createNotification() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         Notification noti = new NotificationCompat.Builder(this)
@@ -212,6 +246,11 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
     public class Receiver extends BroadcastReceiver {
 
         public static final String WEATHER = "weather";
@@ -224,6 +263,48 @@ public class MainActivity extends Activity {
             progressBar.setVisibility(View.GONE);
 
             createNotification();
+        }
+    }
+
+    private LocalService mBoundService;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the service object we can use to
+            // interact with the service.  Because we have bound to a explicit
+            // service that we know is running in our own process, we can
+            // cast its IBinder to a concrete class and directly access it.
+            mBoundService = ((LocalService.LocalBinder)service).getService();
+            progressBar.setVisibility(View.GONE);
+            mEditText.setText(String.valueOf(mBoundService.getRandom(10, 20)));
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            // Because it is running in our same process, we should never
+            // see this happen.
+            mBoundService = null;
+            mEditText.setText("Unbound");
+        }
+    };
+
+    void doBindService() {
+        // Establish a connection with the service.  We use an explicit
+        // class name because we want a specific service implementation that
+        // we know will be running in our own process (and thus won't be
+        // supporting component replacement by other applications).
+        bindService(new Intent(MainActivity.this,
+                LocalService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService() {
+        if (mIsBound) {
+            // Detach our existing connection.
+            unbindService(mConnection);
+            mIsBound = false;
         }
     }
 }

@@ -23,8 +23,15 @@
         <activity android:name=".FragmentsActivity"/>
 
         <service android:name=".network.WeatherService" />
+        <service android:name=".LocalService" />
 
-        <receiver android:name=".MainActivity$Receiver" />
+<!--        <receiver android:name=".MainActivity$Receiver" >
+            <intent-filter>
+                <action android:name="weather.received" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>-->
     </application>
 
 </manifest>
