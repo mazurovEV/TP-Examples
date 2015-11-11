@@ -3,22 +3,6 @@ package tp.emazurov.lesson1.network;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRoute;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HttpContext;
-import tp.emazurov.lesson1.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import tp.emazurov.lesson1.MainActivity;
 
 /**
  * Created by Rustam on 25.09.2014.
@@ -71,36 +57,36 @@ public class WeatherService extends IntentService {
         sendBroadcast(broadcastIntent);
     }
 
-    public void httpGet() throws IOException {
-        HttpGet request = new HttpGet("https://simple-weather.p.mashape.com/weather?lat=55.865314&lng=37.603341");
-        request.setHeader("X-Mashape-Key", "xvtJ6rRJAVmshbFasYHld3ERssImp1SWJWfjsnVUzLXgfE7U53");
-
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-        HttpParams params = new BasicHttpParams();
-        ConnManagerParams.setMaxTotalConnections(params, 10);
-        ConnManagerParams.setMaxConnectionsPerRoute(params,
-                new ConnPerRoute() {
-                    @Override
-                    public int getMaxForRoute(HttpRoute route) {
-                        return 5;
-                    }
-                });
-        ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
-        DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
-        httpClient.setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
-            @Override
-            public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
-                return 5000;
-            }
-        });
-        HttpResponse response = httpClient.execute(request);
-        int code = response.getStatusLine().getStatusCode();
-        if (code == 200) {
-            handleInputStream(response.getEntity().getContent());
-        }
-    }
+//    public void httpGet() throws IOException {
+//        HttpGet request = new HttpGet("https://simple-weather.p.mashape.com/weather?lat=55.865314&lng=37.603341");
+//        request.setHeader("X-Mashape-Key", "xvtJ6rRJAVmshbFasYHld3ERssImp1SWJWfjsnVUzLXgfE7U53");
+//
+//        SchemeRegistry schemeRegistry = new SchemeRegistry();
+//        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+//        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+//        HttpParams params = new BasicHttpParams();
+//        ConnManagerParams.setMaxTotalConnections(params, 10);
+//        ConnManagerParams.setMaxConnectionsPerRoute(params,
+//                new ConnPerRoute() {
+//                    @Override
+//                    public int getMaxForRoute(HttpRoute route) {
+//                        return 5;
+//                    }
+//                });
+//        ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+//        DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
+//        httpClient.setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
+//            @Override
+//            public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
+//                return 5000;
+//            }
+//        });
+//        HttpResponse response = httpClient.execute(request);
+//        int code = response.getStatusLine().getStatusCode();
+//        if (code == 200) {
+//            handleInputStream(response.getEntity().getContent());
+//        }
+//    }
 
     @Override
     protected void onHandleIntent(Intent intent) {

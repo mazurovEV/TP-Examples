@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="tp.emazurov.lesson1">
+<manifest
+    package="tp.emazurov.lesson1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
-           <!-- <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:label="@string/app_name">
+            <!-- <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>-->
         </activity>
         <activity android:name=".StartedActivity"/>
         <activity android:name=".StartedForResultActivity"/>
         <activity android:name=".FragmentsActivity"/>
-        <activity android:name=".DialogActivity" android:theme="@android:style/Theme.Dialog">
+        <activity
+            android:name=".DialogActivity"
+            android:theme="@android:style/Theme.Dialog">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,23 +33,28 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name=".PieChartActivity" android:theme="@style/AppTheme.Custom">
+        <!--<activity android:name=".PieChartActivity" android:theme="@android:style/Theme.Dialog">-->
+        <activity
+            android:name=".PieChartActivity"
+            android:theme="@style/AppTheme.Custom">
+            <!--<activity android:name=".preferences.AdvancedPreferences" android:theme="@style/AppTheme.Custom">-->
+            <!--<activity android:name=".preferences.FragmentPreferences" android:theme="@style/AppTheme.Custom">-->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <service android:name=".network.WeatherService" />
+        <service android:name=".network.WeatherService"/>
 
-        <receiver android:name=".MainActivity$Receiver" />
+        <receiver android:name=".MainActivity$Receiver"/>
+
         <activity android:name=".loaders.LoaderCursor">
-           <!-- <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!-- <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>-->
         </activity>
 
         <activity android:name=".loaders.LoaderThrottle">
@@ -58,8 +66,8 @@
         </activity>
 
         <provider
-            android:authorities="tp.emazurov.lesson1.loaders.LoaderThrottle"
             android:name=".loaders.LoaderThrottle$SimpleProvider"
+            android:authorities="tp.emazurov.lesson1.loaders.LoaderThrottle"
             android:exported="false"/>
     </application>
 
