@@ -11,6 +11,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import tp.emazurov.lesson1.MainActivity;
 
 /**
@@ -20,6 +25,21 @@ public class WeatherService extends IntentService {
 
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
+
+    public interface WeatherServiceInterface {
+        @Headers("X-Mashape-Key: xvtJ6rRJAVmshbFasYHld3ERssImp1SWJWfjsnVUzLXgfE7U53")
+        @GET("weather?lat={latitude}&lng={longitude}")
+        Call<String> listRepos(@Path("longitude") String longitude, @Path("longitude") String latitude);
+    }
+
+    public String retrofit(String longitude, String latitude) throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://simple-weather.p.mashape.com")
+                .build();
+        WeatherServiceInterface service = retrofit.create(WeatherServiceInterface.class);
+        Call<String> repos = service.listRepos(longitude, latitude);
+        return repos.execute().body();
+    }
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -62,7 +82,8 @@ public class WeatherService extends IntentService {
         String longitude = intent.getStringExtra(LONGITUDE);
         String latitude = intent.getStringExtra(LATITUDE);
         try {
-            urlConnection(longitude, latitude);
+//            urlConnection(longitude, latitude);
+            retrofit(longitude, latitude);
         } catch (IOException e) {
             Log.e("", e.getLocalizedMessage(), e);
         }
